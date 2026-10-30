@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Safarnama - travel across India</title>
+<meta name="description" content="A front-end travel concept for exploring destinations across India - places, stays, flights, seasons and festivals.">
+<link rel="stylesheet" href="styles.css">
+<script src="config.js"></script>
+<script src="app.js" defer></script>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <a class="nav-brand" href="#top">Safarnama<span class="nav-brand-dot">.</span></a>
+  <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-links" id="navLinks">
+    <a href="#destinations">Destinations</a>
+    <a href="#flights">Flights</a>
+    <a href="#seasons">When to go</a>
+    <a href="#about">About</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="hero-media"><img src="photos/hero.jpg" alt="A mountain lake at dawn"></div>
+  <div class="hero-veil"></div>
+  <div class="hero-inner">
+    <p class="hero-eyebrow">A front-end travel concept</p>
+    <h1>Every journey<br>begins with a name.</h1>
+    <p class="hero-sub">Twelve corners of India - what to see, where to stay, how to get there, and when each place is at its best.</p>
+    <div class="hero-search">
+      <input type="search" id="searchInput" placeholder="Search a place, a state, a feeling..." aria-label="Search destinations">
+    </div>
+    <div class="hero-chips">
+      <span>12 destinations</span>
+      <span>Flights + stays + festivals</span>
+      <span>Demo - no bookings</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="section" id="seasons">
+  <p class="section-eyebrow">When can you travel?</p>
+  <h2 class="section-title">Pick a month, see what is in season</h2>
+  <p class="section-sub">India changes with the calendar. Choose a month and the destinations below will show you where the season is right.</p>
+  <div class="month-bar" id="monthBar" role="group" aria-label="Filter by travel month"></div>
+  <p class="month-note" id="monthNote"></p>
+</section>
+
+<section class="section" id="destinations">
+  <p class="section-eyebrow">Where to?</p>
+  <h2 class="section-title">Destinations across India</h2>
+  <div class="filter-bar">
+    <div class="filter-group" id="regionFilters" role="group" aria-label="Filter by region"></div>
+    <div class="filter-group" id="vibeFilters" role="group" aria-label="Filter by vibe"></div>
+  </div>
+  <p class="result-count" id="resultCount"></p>
+  <div class="grid" id="grid"></div>
+  <p class="empty-state" id="emptyState" hidden>Nothing matches that mix - try clearing a filter or the search.</p>
+</section>
+
+<section class="section detail" id="detail" hidden>
+  <button class="chip detail-back" id="detailBack">&larr; Back to all destinations</button>
+  <div class="detail-card">
+    <div class="modal-media"><img id="modalImg" src="" alt=""></div>
+    <div class="modal-body">
+      <p class="modal-state" id="modalState"></p>
+      <h3 class="modal-title" id="modalTitle"></h3>
+      <p class="modal-blurb" id="modalBlurb"></p>
+      <div class="modal-facts" id="modalFacts"></div>
+      <h4>Places to visit</h4>
+      <ul class="modal-places" id="modalPlaces"></ul>
+      <h4>Getting there <span class="modal-fare-note">examples checked 30 Oct 2026</span></h4>
+      <div class="modal-getting" id="modalGetting"></div>
+      <p class="modal-demo">Demo only - nothing here books or reserves.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="states">
+  <p class="section-eyebrow">Every state, season by season</p>
+  <h2 class="section-title">The whole of India, not just the highlights</h2>
+  <p class="section-sub">The 12 cards above are a hand-picked subset with researched prices. This guide covers all 28 states - when each is at its best and one festival worth travelling for. Festival timing is recurring guidance (most follow the lunar calendar, so exact dates shift year to year); confirm dates before you plan.</p>
+  <div class="hero-search states-search">
+    <input type="search" id="stateSearch" placeholder="Search a state or festival..." aria-label="Search states">
+  </div>
+  <div class="states-list" id="statesList"></div>
+  <p class="result-count" id="statesCount"></p>
+  <h3 class="states-subhead">Union territories (8) - quick guide</h3>
+  <p class="section-sub">Listed separately so the 28-state list above stays exact.</p>
+  <div class="states-list" id="utsList"></div>
+</section>
+
+<section class="section" id="flights">
+  <p class="section-eyebrow">Getting there</p>
+  <h2 class="section-title">Example flight fares</h2>
+  <p class="section-sub">Real quotes from a live booking search (Duffel), pulled <strong>30 Oct 2026</strong> for one-way economy on <strong>28 Nov 2026</strong>, in USD as returned. They are dated examples, not guaranteed prices - any real search needs a booking backend, which this front end does not have.</p>
+  <div class="fare-table-wrap">
+    <table class="fare-table">
+      <thead><tr><th>Route (one-way, 28 Nov 2026)</th><th>From</th></tr></thead>
+      <tbody id="fareBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="section section-alt" id="about">
+  <p class="section-eyebrow">About this site</p>
+  <h2 class="section-title">Front end only, honestly labelled</h2>
+  <div class="about-grid">
+    <div class="about-card">
+      <h3>What this is</h3>
+      <p>A design concept built in plain HTML, CSS and JavaScript. No backend, no accounts, no payments and no real bookings - the fares and hotel rates are real numbers found online, but each is a dated example from a named source, not a live quote.</p>
+    </div>
+    <div class="about-card">
+      <h3>What a real launch needs</h3>
+      <p>A flight and hotel search API, live availability, payments, and a server. Until then, treat every price here as "seen online on 30 Oct 2026" and re-check before planning.</p>
+    </div>
+    <div class="about-card" id="sourceCard">
+      <h3>Take the source</h3>
+      <p>The whole site is three plain files. Open them, edit them, host them anywhere.</p>
+      <div class="source-buttons" id="sourceButtons">
+        <button class="btn" data-source="html">Download index.html</button>
+        <button class="btn" data-source="css">Download styles.css</button>
+        <button class="btn" data-source="js">Download app.js</button>
+      </div>
+      <p class="source-note" id="sourceNote" hidden>You opened this from the source files themselves - you already have everything.</p>
+    </div>
+    <div class="about-card">
+      <h3>Photo credits</h3>
+      <p class="credits">Unsplash, and Wikimedia Commons: Shameer Thajudeen (Manali), Hirumon (Udaipur), Sourabh Biswas (Darjeeling), Mahesh I. (Mumbai), Vyacheslav Argenberg (Andaman).</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <p><strong>Safarnama</strong> is a proposed name - swap it for whatever you like. Front-end demo: nothing here books, charges or reserves anything.</p>
+</footer>
+
+
+
+</body>
+</html>
