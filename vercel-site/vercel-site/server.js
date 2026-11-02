@@ -223,11 +223,10 @@ export default async function handler(req, res) {
   // Photo -> destination guess via Gemini free tier. Photos are sent to Google
   // (disclosed in the site UI). Rate limited per IP to protect the free quota.
   if (pathname === '/api/photo' && req.method === 'POST') {
-    if (!sessionOk(req)) {
-      res.writeHead(401, headers);
-      res.end(JSON.stringify({ error: 'unauthorized' }));
-      return;
-    }
+    const bearer=req.headers.authorization||'';
+    if(!/^Bearer [A-Za-z0-9_.-]+$/.test(bearer)){res.writeHead(401,headers);res.end(JSON.stringify({error:'login_required'}));return;}
+    const userCheck=await fetch(SUPABASE_URL+'/auth/v1/user',{headers:{apikey:SUPABASE_ANON_KEY,Authorization:bearer},signal:AbortSignal.timeout(8000)}).catch(()=>null);
+    if(!userCheck||!userCheck.ok){res.writeHead(401,headers);res.end(JSON.stringify({error:'login_required'}));return;}
     const ip = req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
     if (!GEMINI_API_KEY) {
       res.writeHead(503, headers);
@@ -291,11 +290,6 @@ export default async function handler(req, res) {
   }
 
   if (pathname === '/api/content') {
-    if (!sessionOk(req)) {
-      res.writeHead(401, headers);
-      res.end(JSON.stringify({ error: 'unauthorized' }));
-      return;
-    }
     if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
       res.writeHead(500, headers);
       res.end(JSON.stringify({ error: 'backend not configured' }));
@@ -316,17 +310,6 @@ export default async function handler(req, res) {
     return;
   }
 
-  // Everything else is the gated static site.
-  if (!GATE_PASS_HASH || !SESSION_KEY) {
-    res.writeHead(503, { 'Content-Type': 'text/plain' });
-    res.end('site not configured');
-    return;
-  }
-  if (!sessionOk(req)) {
-    if (req.method !== 'GET') { res.writeHead(401); res.end('unauthorized'); return; }
-    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' });
-    res.end(GATE_HTML.replace('ERR', ''));
-    return;
-  }
+  // Public travel website. Personal profiles remain protected by Supabase RLS.
   serveStatic(req, res, pathname);
 }
