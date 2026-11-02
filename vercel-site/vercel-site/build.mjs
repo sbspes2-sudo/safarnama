@@ -19,3 +19,9 @@ for(const e of z.getEntries()){
  }
 }
 console.log('Current 38-destination private assets prepared');
+
+const ds=JSON.parse(z.readAsText('safarnama-current/data/destinations.json'));
+const out=Object.fromEntries(['destinations','destination_getting','destination_places','dishes','eateries','stays','shops'].map(k=>[k,[]]));
+for(const d of ds){const r={};for(const k of ['id','name','state','region','vibes','blurb','photo','alt','best','months','ideal'])r[k]=d[k];r.photo_credit=d.credit;for(const k of ['name','when','note'])r['festival_'+k]=(d.festival||{})[k];out.destinations.push(r);
+for(const [key,field] of [['getting','destination_getting'],['places','destination_places'],['food','dishes'],['eats','eateries'],['stays','stays'],['shops','shops']])for(const [i,x] of (d[key]||[]).entries()){const v=typeof x==='string'?{name:x}:Object.fromEntries(Object.entries(x).map(([k,v])=>[k==='n'?'name':k==='r'?'rating':k==='ta'?'tripadvisor':k,v]));out[field].push({...v,destination_id:d.id,position:i});}}
+fs.writeFileSync('private-assets/content.json',JSON.stringify(out));
