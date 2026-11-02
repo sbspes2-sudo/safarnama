@@ -2,6 +2,7 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
@@ -97,7 +98,7 @@ ERR
 </form></body></html>`;
 
 const MIME = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.json': 'application/json', '.svg': 'image/svg+xml' };
-const PUBLIC_DIR = path.join(process.cwd(), 'private-assets');
+const PUBLIC_DIR = fileURLToPath(new URL('./private-assets/', import.meta.url));
 
 // Resolve legacy numeric-prefixed static assets; exact file names take priority.
 function listFiles(dir) {
