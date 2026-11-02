@@ -98,7 +98,8 @@ ERR
 </form></body></html>`;
 
 const MIME = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.json': 'application/json', '.svg': 'image/svg+xml' };
-const PUBLIC_DIR = fileURLToPath(new URL('./private-assets/', import.meta.url));
+const ASSET_CANDIDATES = [fileURLToPath(new URL('./private-assets/', import.meta.url)), path.join(process.cwd(),'private-assets'), path.join(process.cwd(),'vercel-site/vercel-site/private-assets')];
+const PUBLIC_DIR = ASSET_CANDIDATES.find(p=>fs.existsSync(path.join(p,'index.html'))) || ASSET_CANDIDATES[0];
 
 // Resolve legacy numeric-prefixed static assets; exact file names take priority.
 function listFiles(dir) {
@@ -155,7 +156,7 @@ const CALLBACK_HTML = `<!DOCTYPE html>
   }
   // Deliver the payload only to a verified Safarnama origin that identifies
   // itself first; never broadcast tokens/codes with '*'.
-  var TRUSTED = /^https:\\/\\/(files\\.instinct\\.com|filerevision-[a-z0-9]+\\.instinctusercontent\\.com|safarnama-backend-3a61\\.onrender\\.com)$/;
+  var TRUSTED = /^https:\\/\\/(files\\.instinct\\.com|filerevision-[a-z0-9]+\\.instinctusercontent\\.com|safarnama-mauve-zeta\\.vercel\\.app)$/;
   var done = false;
   function finish(msg) { if (!done) { done = true; document.getElementById('msg').textContent = msg; } }
   window.addEventListener('message', function (e) {
@@ -215,7 +216,7 @@ export default async function handler(req, res) {
 
   if (pathname === '/api/health') {
     res.writeHead(200, headers);
-    res.end(JSON.stringify({ ok: true, service: 'safarnama-backend' }));
+    res.end(JSON.stringify({ ok: true, service: 'safarnama-vercel', assets:ASSET_CANDIDATES.map(p=>fs.existsSync(path.join(p,'index.html'))) }));
     return;
   }
 
