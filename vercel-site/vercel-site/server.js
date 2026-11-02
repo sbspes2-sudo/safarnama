@@ -259,7 +259,7 @@ export default async function handler(req, res) {
             headers: { 'Content-Type': 'application/json', 'x-goog-api-key': GEMINI_API_KEY },
             body: JSON.stringify({
               contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: mime, data: image } }] }],
-              generationConfig: { temperature: 0.2, maxOutputTokens: 512 },
+              generationConfig: { temperature: 0.2, maxOutputTokens: 512, responseMimeType: 'application/json' },
             }),
           });
           if (gRes.ok) break;
@@ -273,7 +273,7 @@ export default async function handler(req, res) {
         const text = (((gData.candidates || [])[0] || {}).content || {}).parts;
         const raw = text && text[0] && text[0].text ? text[0].text : '';
         let guess = null;
-        try { guess = JSON.parse(raw); } catch (e) { guess = null; }
+        try { guess = JSON.parse(raw.trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'')); } catch (e) { guess = null; }
         if (!guess || typeof guess !== 'object') {
           res.writeHead(502, headers);
           res.end(JSON.stringify({ error: 'unparseable' }));
