@@ -1,7 +1,7 @@
 import AdmZip from 'adm-zip';
 import fs from 'node:fs';
 import path from 'node:path';
-const archive=path.join(process.cwd(),'../../3-Safarnama-current-38.zip');
+const archive=path.join(process.cwd(),'../../1-Safarnama-current-42.zip');
 const z=new AdmZip(archive);
 fs.mkdirSync('private-assets',{recursive:true});
 for(const e of z.getEntries()){
@@ -30,7 +30,7 @@ data=Buffer.from(h);}
   }fs.writeFileSync(out,data);
  }
 }
-console.log('Current 38-destination private assets prepared');
+console.log('Current 42-destination private assets prepared');
 
 const ds=JSON.parse(z.readAsText('safarnama-current/data/destinations.json'));
 const out=Object.fromEntries(['destinations','destination_getting','destination_places','dishes','eateries','stays','shops'].map(k=>[k,[]]));
