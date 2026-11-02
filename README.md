@@ -2,7 +2,9 @@
 
 Saved 3 November 2026 (India time). This is the current 38-destination website, including the Surprise trip planner no-match/recovery fix. It replaces the older 12-destination version as the current source snapshot. No bookings or payments are made by this demo.
 
-## Files
+Download `3-Safarnama-current-38.zip` from this repository and extract it. The files below are inside its `safarnama-current/` folder. The numeric prefix is part of the saved archive filename.
+
+## Files inside the archive
 - `public/`: complete HTML/CSS/JavaScript frontend and local photos, with photo credits and licence links retained in the app.
 - `server.js`: current Node.js server for the private passcode gate, content reads, OAuth callback and photo-AI endpoint.
 - `data/destinations.json`: bundled destination content snapshot, not an export of user accounts or profiles.
