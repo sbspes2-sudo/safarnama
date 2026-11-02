@@ -222,72 +222,7 @@ export default async function handler(req, res) {
 
   // Photo -> destination guess via Gemini free tier. Photos are sent to Google
   // (disclosed in the site UI). Rate limited per IP to protect the free quota.
-  if (pathname === '/api/photo' && req.method === 'POST') {
-    const bearer=req.headers.authorization||'';
-    if(!/^Bearer [A-Za-z0-9_.-]+$/.test(bearer)){res.writeHead(401,headers);res.end(JSON.stringify({error:'login_required'}));return;}
-    const userCheck=await fetch(SUPABASE_URL+'/auth/v1/user',{headers:{apikey:SUPABASE_ANON_KEY,Authorization:bearer},signal:AbortSignal.timeout(8000)}).catch(()=>null);
-    if(!userCheck||!userCheck.ok){res.writeHead(401,headers);res.end(JSON.stringify({error:'login_required'}));return;}
-    const ip = req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
-    if (!GEMINI_API_KEY) {
-      res.writeHead(503, headers);
-      res.end(JSON.stringify({ error: 'photo_ai_unconfigured' }));
-      return;
-    }
-    if (photoRateLimited(ip)) {
-      res.writeHead(429, headers);
-      res.end(JSON.stringify({ error: 'rate_limited' }));
-      return;
-    }
-    let body = '';
-    req.on('data', (c) => { body += c; if (body.length > 8 * 1024 * 1024) req.destroy(); });
-    req.on('end', async () => {
-      try {
-        const parsed = JSON.parse(body || '{}');
-        const image = String(parsed.image || '');
-        const mime = String(parsed.mimeType || '');
-        if (!image || image.length > 6 * 1024 * 1024 || !/^image\/(jpeg|png|webp)$/.test(mime)) {
-          res.writeHead(400, headers);
-          res.end(JSON.stringify({ error: 'bad_image' }));
-          return;
-        }
-        const prompt = 'You are helping an Indian travel guide app. Look at this photo and guess the most likely place in India it shows (or the closest well-known Indian destination). Respond ONLY as JSON with these keys: "place" (string or null), "state" (string), "confidence" ("high"|"medium"|"low"), "why" (one sentence), "best_season" (string), "estimated_trip_cost_inr" (object with "budget" and "comfort" string ranges, per person for 3 days, very rough). If the photo does not look like a real place in India, use "place": null and a "reason" string.';
-        const MODELS = ['gemini-3.1-flash-lite', 'gemini-flash-latest', 'gemini-3.8-flash'];
-        let gRes = null, gData = null;
-        for (const model of MODELS) {
-          gRes = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'x-goog-api-key': GEMINI_API_KEY },
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: mime, data: image } }] }],
-              generationConfig: { temperature: 0.2, maxOutputTokens: 512, responseMimeType: 'application/json' },
-            }),
-          });
-          if (gRes.ok) break;
-        }
-        gData = await gRes.json().catch(() => ({}));
-        if (!gRes.ok) {
-          res.writeHead(502, headers);
-          res.end(JSON.stringify({ error: 'gemini_error' }));
-          return;
-        }
-        const text = (((gData.candidates || [])[0] || {}).content || {}).parts;
-        const raw = text && text[0] && text[0].text ? text[0].text : '';
-        let guess = null;
-        try { guess = JSON.parse(raw.trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'')); } catch (e) { guess = null; }
-        if (!guess || typeof guess !== 'object') {
-          res.writeHead(502, headers);
-          res.end(JSON.stringify({ error: 'unparseable' }));
-          return;
-        }
-        res.writeHead(200, headers);
-        res.end(JSON.stringify({ guess }));
-      } catch (e) {
-        res.writeHead(500, headers);
-        res.end(JSON.stringify({ error: 'server_error' }));
-      }
-    });
-    return;
-  }
+  if(pathname==='/api/photo'){res.writeHead(410,headers);res.end(JSON.stringify({error:'feature_removed'}));return;}
 
   if (pathname === '/api/content') {
     if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
