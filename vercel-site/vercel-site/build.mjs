@@ -14,6 +14,9 @@ for(const e of z.getEntries()){
    let s=data.toString();s=s.replace("https://safarnama-backend-3a61.onrender.com/auth/callback","https://safarnama-mauve-zeta.vercel.app/auth/callback");
    s=s.replaceAll('https://safarnama-backend-3a61.onrender.com','https://safarnama-mauve-zeta.vercel.app');
    s=s.replaceAll("location.hostname === 'safarnama-backend-3a61.onrender.com'","location.hostname === 'safarnama-mauve-zeta.vercel.app'");
+   s=s.replace("headers: { 'Content-Type': 'application/json' },\n          body: JSON.stringify({ image: base64","headers: { 'Content-Type': 'application/json', 'Authorization': authSession && authSession.token ? 'Bearer ' + authSession.token : '' },\n          body: JSON.stringify({ image: base64");
+   s=s.replace("if (data && data.error === 'rate_limited')","if (data && data.error === 'login_required') photoSay('Log in with Google or your account to use photo discovery.'); else if (data && data.error === 'rate_limited')");
+   s=s.replace("photoInput.addEventListener('change', function () {","photoInput.addEventListener('change', function () { if (!authSession || !authSession.token) { photoSay('Log in with Google or your account to use photo discovery.'); photoInput.value=''; return; }");
    data=Buffer.from(s);
   }fs.writeFileSync(out,data);
  }
