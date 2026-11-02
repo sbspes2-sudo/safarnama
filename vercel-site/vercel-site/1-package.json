@@ -1,0 +1,15 @@
+{
+  "name": "safarnama-vercel",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "vercel-build": "node build.mjs",
+    "postinstall": "node build.mjs"
+  },
+  "dependencies": {
+    "adm-zip": "0.5.16"
+  }
+}
