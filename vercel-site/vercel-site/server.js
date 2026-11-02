@@ -303,12 +303,13 @@ export default async function handler(req, res) {
       const entries = await Promise.all(
         Object.entries(TABLES).map(async ([name, query]) => [name, await fetchTable(name, query)])
       );
-      const data = Object.fromEntries(entries);
+      let data = Object.fromEntries(entries);
+      if(!data.destinations.length) data=JSON.parse(fs.readFileSync(path.join(PUBLIC_DIR,'content.json'),'utf8')); 
       res.writeHead(200, { ...headers, 'Cache-Control': 'private, no-store' });
       res.end(JSON.stringify(data));
     } catch (err) {
-      res.writeHead(502, headers);
-      res.end(JSON.stringify({ error: 'content source unavailable' }));
+      res.writeHead(200,{...headers,'Cache-Control':'private, no-store'});
+      res.end(fs.readFileSync(path.join(PUBLIC_DIR,'content.json'),'utf8'));
     }
     return;
   }
@@ -326,4 +327,4 @@ export default async function handler(req, res) {
     return;
   }
   serveStatic(req, res, pathname);
-    }
+}
