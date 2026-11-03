@@ -1,7 +1,7 @@
 import AdmZip from 'adm-zip';
 import fs from 'node:fs';
 import path from 'node:path';
-const archive=path.join(process.cwd(),'../../1-Safarnama-current-42.zip');
+const archive=path.join(process.cwd(),'../../1-1-Safarnama-current-46.zip');
 const z=new AdmZip(archive);
 fs.mkdirSync('private-assets',{recursive:true});
 for(const e of z.getEntries()){
@@ -30,7 +30,7 @@ data=Buffer.from(h);}
   }fs.writeFileSync(out,data);
  }
 }
-console.log('Current 42-destination private assets prepared');
+console.log('Current 46-destination private assets prepared');
 
 const ds=JSON.parse(z.readAsText('safarnama-current/data/destinations.json'));
 const out=Object.fromEntries(['destinations','destination_getting','destination_places','dishes','eateries','stays','shops'].map(k=>[k,[]]));
@@ -94,3 +94,6 @@ h=h.replace("Who made it, for whom, and why.","Who made it, for whom, and why.")
 h=h.replace("<h3>Accounts and travel limitations</h3>","<h3>Accounts and travel limitations</h3><p>Monument stories have optional browser audio using only voices the browser reports as local. No speech API is used by Safarnama. This is a curated guide, not photo recognition. Text remains available when a local English voice is missing. Detailed design/construction notes cover a limited set of monuments; missing facts are not guessed.</p>");
 fs.writeFileSync("private-assets/index.html",h);fs.writeFileSync("private-assets/app.js",s);
 }
+
+// Monument stories for South batch6.
+{let s=fs.readFileSync("private-assets/app.js","utf8");s=s.replace("  function renderMonumentStories(d){","  Object.assign(MONUMENT_STORIES, {\"rameswaram\": [{\"title\": \"Ramanathaswamy: the story of Rama and Sita\", \"text\": \"In Hindu tradition, Rama wished to worship Shiva after defeating Ravana. When Hanuman was delayed bringing a lingam, Sita made one from sand so that Rama could pray. This is the sacred origin story of Ramalingam, not a documented construction record for the present temple.\", \"url\": \"https://www.tamilnadutourism.tn.gov.in/destinations/rameswaram-temple\", \"kind\": \"Hindu tradition, not documented building history\"}], \"kanyakumari\": [{\"title\": \"Gandhi Memorial: remembering the ashes before immersion\", \"text\": \"An urn holding Gandhi's ashes was placed here for people to pay their respects before the ashes were immersed in the sea in 1948. The memorial, completed in 1956, marks that moment of farewell rather than a place where Gandhi lived.\", \"url\": \"https://kanniyakumari.nic.in/tourist-place/mahatma-gandhi/\", \"kind\": \"Documented memorial history\"}], \"puducherry\": [{\"title\": \"French War Memorial: names behind a seafront monument\", \"text\": \"The memorial honours soldiers from French India who died in the First World War. Inaugurated in 1938, it places the human cost of war on the seafront. It is a memorial to the dead, not a palace or a triumphal gateway.\", \"url\": \"https://www.incredibleindia.gov.in/en/puducherry/puducherry/french-war-memorial\", \"kind\": \"Documented memorial history\"}], \"thanjavur\": [{\"title\": \"Brihadisvara: Rajaraja makes a royal statement\", \"text\": \"Rajaraja I commissioned the great Shiva temple at Thanjavur in the early 11th century. Its commanding tower expressed Chola royal ambition as well as devotion. UNESCO calls these living temples because worship traditions continue, not because they are only preserved ruins.\", \"url\": \"https://whc.unesco.org/en/list/250/\", \"kind\": \"Documented patronage and living worship\"}]});\n"+"  function renderMonumentStories(d){");fs.writeFileSync("private-assets/app.js",s);}
